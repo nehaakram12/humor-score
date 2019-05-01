@@ -6,9 +6,6 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
-from random import randint
-from googleapiclient import discovery
-import json
 
 
 app = flask.Flask(__name__)
@@ -18,16 +15,8 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
 def init():
-    # global d,loaded_model_humor,service
-    # load the pre-trained Keras model
     print("Please wait while the Data-Models load!...")
-    # d = []
-    # dataFile = open('output1.txt', 'rb')
-    # d = pickle.load(dataFile)
-    # filename_humor = 'partial_fit_model.sav'
-    # loaded_model_humor = pickle.load(open(filename_humor, 'rb'))
-
-
+ 
 
 @app.route('/', methods=['GET'])
 def home():
@@ -62,23 +51,9 @@ def api_text():
     humorscore = int(abs(int(lol[0])*100))
 
 
-    API_KEY='AIzaSyCZspzx7MtubROWWX9NK-USz91ZeIpojoE'
-    # Generates API client object dynamically based on service name and version.
-    service = discovery.build('commentanalyzer', 'v1alpha1', developerKey=API_KEY)
-    analyze_request = {
-      'comment': { 'text': inputsen},
-      'requestedAttributes': {'TOXICITY': {}}
-    }
-    response = service.comments().analyze(body=analyze_request).execute()
-    k = json.loads(json.dumps(response, indent=2))
-    insultscore=k["attributeScores"]["TOXICITY"]["spanScores"][0]["score"]["value"]
-    print ("The insult score is: ")
-    print (insultscore)
-
     results = {
      'Input': inputsen,
      'Humor': humorscore,
-     'Insult': insultscore
     }
 
     return jsonify(results)
