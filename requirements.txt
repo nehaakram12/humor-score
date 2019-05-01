@@ -1,0 +1,11 @@
+textblob
+gunicorn==19.9.0
+protobuf==3.6.0
+scikit-learn
+sklearn==0.0
+tensorflow==1.9.0
+Werkzeug==0.14.1
+flask
+requests
+nltk
+google-api-python-client
