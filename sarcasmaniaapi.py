@@ -9,9 +9,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from googleapiclient import discovery
 import json
 
+#initializing flask api
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
-
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
@@ -31,12 +31,14 @@ def page_not_found(e):
 @app.route('/api/sarcasmania', methods=['GET'])
 def api_text():
     inputsen=""
+    #taking sentence from url params
     if 'text' in request.args:
         inputsen = (request.args['text'])
     else:
         return "Error: No text field provided. Please specify text."
     print("Input Line: ", inputsen)
 
+    #humor prediction
     d = []
     dataFile = open('output1.txt', 'rb')
     print("File opened")
@@ -51,6 +53,7 @@ def api_text():
     print("prediction calculated")
     humorscore = int(abs(int(lol[0])*100))
 
+    #insult prediction
     API_KEY='AIzaSyCZspzx7MtubROWWX9NK-USz91ZeIpojoE'
     # Generates API client object dynamically based on service name and version.
     service = discovery.build('commentanalyzer', 'v1alpha1', developerKey=API_KEY)
@@ -76,7 +79,6 @@ def api_text():
 def create_tfidf_training_data_humor(docs, input):
     y = [d[0] for d in docs]
     corpus = [d[1] for d in docs]
-    #corpus.append("helluss") #jo sentence hai wo yahan input dena ho ga for it to get vectorized
     vectorizer = TfidfVectorizer(min_df=1)
     X = vectorizer.fit_transform(corpus)
     t=vectorizer.transform([input])
